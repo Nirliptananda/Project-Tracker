@@ -337,6 +337,24 @@ function App() {
     localStorage.setItem("projectTrackerTheme", theme);
   }, [theme]);
 
+  React.useEffect(function () {
+    function handleStorageChange(event) {
+      if (event.key === "projectTracker") {
+        setProjects(loadProjects());
+      }
+
+      if (event.key === "projectTrackerTheme") {
+        setTheme(loadTheme());
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return function () {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
   function handleSaveProject(project) {
     if (editingProject) {
       setProjects(projects.map(function (currentProject) {
