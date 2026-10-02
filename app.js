@@ -26,6 +26,26 @@ function getNextStatus(status) {
   return STATUSES[statusIndex + 1];
 }
 
+// Read saved projects, or use the seed projects when saving is unavailable.
+function loadProjects() {
+  try {
+    var savedProjects = localStorage.getItem("projectTracker");
+
+    if (!savedProjects) {
+      return SEED_PROJECTS;
+    }
+
+    var parsedProjects = JSON.parse(savedProjects);
+    if (Array.isArray(parsedProjects)) {
+      return parsedProjects;
+    }
+  } catch (error) {
+    return SEED_PROJECTS;
+  }
+
+  return SEED_PROJECTS;
+}
+
 // Show one project's category, name, and notes.
 function Card(props) {
   var nextStatus = getNextStatus(props.project.status);
@@ -257,10 +277,14 @@ function ProjectForm(props) {
 
 // Render the React version inside the page's root element.
 function App() {
-  const [projects, setProjects] = React.useState(SEED_PROJECTS);
+  const [projects, setProjects] = React.useState(loadProjects);
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [editingProject, setEditingProject] = React.useState(null);
   const [searchText, setSearchText] = React.useState("");
+
+  React.useEffect(function () {
+    localStorage.setItem("projectTracker", JSON.stringify(projects));
+  }, [projects]);
 
   function handleSaveProject(project) {
     if (editingProject) {
