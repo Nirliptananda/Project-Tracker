@@ -92,7 +92,12 @@ function Card(props) {
       <h3 className="card__title">{props.project.project}</h3>
       <p className="card__notes">{props.project.notes || "No notes yet"}</p>
       <div className="card__actions">
-        <button className="button button--secondary" type="button" onClick={handleEditClick}>
+        <button
+          className="button button--secondary"
+          type="button"
+          aria-label={"Edit " + props.project.project}
+          onClick={handleEditClick}
+        >
           Edit
         </button>
         {nextStatus && (
@@ -243,6 +248,12 @@ function ProjectForm(props) {
     setNotes(event.target.value);
   }
 
+  function handleKeyDown(event) {
+    if (event.key === "Escape") {
+      props.onCancel();
+    }
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     var trimmedName = projectName.trim();
@@ -269,7 +280,7 @@ function ProjectForm(props) {
   return (
     <section className="project-form" aria-labelledby="form-title">
       <h2 id="form-title">{props.project ? "Edit project" : "Add a project"}</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
         <div className="project-form__fields">
           <label className="project-form__field">
             Project name
@@ -278,6 +289,8 @@ function ProjectForm(props) {
               value={projectName}
               onChange={handleNameChange}
               maxLength="60"
+              aria-invalid={errorMessage ? "true" : "false"}
+              aria-describedby="project-name-error"
               required
             />
           </label>
@@ -307,7 +320,7 @@ function ProjectForm(props) {
             />
           </label>
         </div>
-        <p className="form-error" aria-live="polite">{errorMessage}</p>
+        <p id="project-name-error" className="form-error" aria-live="polite">{errorMessage}</p>
         <div className="project-form__actions">
           <button className="button button--primary" type="submit">
             {props.project ? "Save changes" : "Save project"}

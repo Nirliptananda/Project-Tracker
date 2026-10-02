@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A simple board for tracking projects through each stage.">
     <title>Project Tracker</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%8B%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
@@ -18,7 +19,7 @@
         <section class="column column--backlog" aria-labelledby="col-backlog">
           <header class="column__header">
             <h2 id="col-backlog">Backlog</h2>
-            <span class="column__count" aria-label="1 project">1</span>
+            <span class="column__count" aria-live="polite" aria-label="1 project">1</span>
           </header>
           <ul class="column__list">
             <li>
@@ -33,7 +34,7 @@
         <section class="column column--progress" aria-labelledby="col-progress">
           <header class="column__header">
             <h2 id="col-progress">In Progress</h2>
-            <span class="column__count" aria-label="1 project">1</span>
+            <span class="column__count" aria-live="polite" aria-label="1 project">1</span>
           </header>
           <ul class="column__list">
             <li>
@@ -48,7 +49,7 @@
         <section class="column column--review" aria-labelledby="col-review">
           <header class="column__header">
             <h2 id="col-review">Review</h2>
-            <span class="column__count" aria-label="1 project">1</span>
+            <span class="column__count" aria-live="polite" aria-label="1 project">1</span>
           </header>
           <ul class="column__list">
             <li>
@@ -63,7 +64,7 @@
         <section class="column column--completed" aria-labelledby="col-completed">
           <header class="column__header">
             <h2 id="col-completed">Completed</h2>
-            <span class="column__count" aria-label="0 projects">0</span>
+            <span class="column__count" aria-live="polite" aria-label="0 projects">0</span>
           </header>
           <ul class="column__list">
             <li class="column__empty">No projects yet</li>
