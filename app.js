@@ -46,6 +46,13 @@ function Column(props) {
     <section className={props.columnClass} aria-labelledby={props.headingId}>
       <header className="column__header">
         <h2 id={props.headingId}>{props.status}</h2>
+        <span
+          className="column__count"
+          aria-live="polite"
+          aria-label={props.projects.length + (props.projects.length === 1 ? " project" : " projects")}
+        >
+          {props.projects.length}
+        </span>
       </header>
       <ul className="column__list">
         {props.projects.length === 0 ? (
