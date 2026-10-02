@@ -324,6 +324,12 @@ function App() {
     setSearchText("");
   }
 
+  function getStatusCount(status) {
+    return projects.filter(function (project) {
+      return project.status === status;
+    }).length;
+  }
+
   function handleDeleteProject(projectId) {
     setProjects(projects.filter(function (project) {
       return project.id !== projectId;
@@ -344,6 +350,11 @@ function App() {
       <header className="app-header">
         <h1>Project Tracker</h1>
         <p className="tagline">Track every project through every stage</p>
+        <p className="stats" aria-live="polite">
+          {STATUSES.map(function (status) {
+            return getStatusCount(status) + " " + status;
+          }).join(" · ")} · {projects.length} total
+        </p>
         <div className="header__actions">
           <button className="button button--primary" type="button" onClick={handleOpenForm}>
             Add project
