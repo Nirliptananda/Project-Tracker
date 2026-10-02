@@ -46,6 +46,21 @@ function loadProjects() {
   return SEED_PROJECTS;
 }
 
+// Use the saved theme, or follow the visitor's system setting.
+function loadTheme() {
+  var savedTheme = localStorage.getItem("projectTrackerTheme");
+
+  if (savedTheme === "light" || savedTheme === "dark") {
+    return savedTheme;
+  }
+
+  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    return "dark";
+  }
+
+  return "light";
+}
+
 // Show one project's category, name, and notes.
 function Card(props) {
   var nextStatus = getNextStatus(props.project.status);
@@ -311,10 +326,16 @@ function App() {
   const [editingProject, setEditingProject] = React.useState(null);
   const [searchText, setSearchText] = React.useState("");
   const [dragOverStatus, setDragOverStatus] = React.useState("");
+  const [theme, setTheme] = React.useState(loadTheme);
 
   React.useEffect(function () {
     localStorage.setItem("projectTracker", JSON.stringify(projects));
   }, [projects]);
+
+  React.useEffect(function () {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("projectTrackerTheme", theme);
+  }, [theme]);
 
   function handleSaveProject(project) {
     if (editingProject) {
@@ -352,6 +373,14 @@ function App() {
 
   function handleClearSearch() {
     setSearchText("");
+  }
+
+  function handleThemeToggle() {
+    if (theme === "light") {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
   }
 
   function getStatusCount(status) {
@@ -405,6 +434,14 @@ function App() {
         <div className="header__actions">
           <button className="button button--primary" type="button" onClick={handleOpenForm}>
             Add project
+          </button>
+          <button
+            className="button button--secondary"
+            type="button"
+            aria-pressed={theme === "dark"}
+            onClick={handleThemeToggle}
+          >
+            {theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
           </button>
         </div>
         <div className="search-field">

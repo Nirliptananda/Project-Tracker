@@ -47,6 +47,22 @@
   --tag-other-fg: #e5e7eb;
 }
 
+[data-theme="dark"] .column--backlog {
+  --column-bg: #252d38;
+}
+
+[data-theme="dark"] .column--progress {
+  --column-bg: #1d3048;
+}
+
+[data-theme="dark"] .column--review {
+  --column-bg: #40351f;
+}
+
+[data-theme="dark"] .column--completed {
+  --column-bg: #1d3a30;
+}
+
 /* The page starts in a single column for narrow screens. */
 * {
   box-sizing: border-box;
@@ -290,6 +306,10 @@ body {
 }
 
 .header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
   margin-top: 16px;
 }
 
