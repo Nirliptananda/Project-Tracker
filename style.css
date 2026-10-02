@@ -373,3 +373,15 @@ body {
     grid-column: 1 / -1;
   }
 }
+
+.card__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.button--danger {
+  border-color: #b91c1c;
+  background: #b91c1c;
+  color: #ffffff;
+}
