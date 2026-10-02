@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple board for tracking projects through each stage.">
+    <title>Project Tracker</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Project Tracker</h1>
+      <p class="tagline">Track every project through every stage</p>
+    </header>
+
+    <main class="board" aria-label="Project board">
+      <section class="column column--backlog" aria-labelledby="col-backlog">
+        <header class="column__header">
+          <h2 id="col-backlog">Backlog</h2>
+          <span class="column__count" aria-label="1 project">1</span>
+        </header>
+        <ul class="column__list">
+          <li>
+            <article class="card">
+              <span class="tag tag--design">Design</span>
+              <h3 class="card__title">Poster for Tech Fest</h3>
+              <p class="card__notes">No notes yet</p>
+            </article>
+          </li>
+        </ul>
+      </section>
+
+      <section class="column column--progress" aria-labelledby="col-progress">
+        <header class="column__header">
+          <h2 id="col-progress">In Progress</h2>
+          <span class="column__count" aria-label="1 project">1</span>
+        </header>
+        <ul class="column__list">
+          <li>
+            <article class="card">
+              <span class="tag tag--web">Web</span>
+              <h3 class="card__title">Portfolio Website</h3>
+              <p class="card__notes">Homepage layout done, working on projects section</p>
+            </article>
+          </li>
+        </ul>
+      </section>
+
+      <section class="column column--review" aria-labelledby="col-review">
+        <header class="column__header">
+          <h2 id="col-review">Review</h2>
+          <span class="column__count" aria-label="1 project">1</span>
+        </header>
+        <ul class="column__list">
+          <li>
+            <article class="card">
+              <span class="tag tag--hardware">Hardware</span>
+              <h3 class="card__title">IoT Weather Station</h3>
+              <p class="card__notes">Sensor calibration pending</p>
+            </article>
+          </li>
+        </ul>
+      </section>
+
+      <section class="column column--completed" aria-labelledby="col-completed">
+        <header class="column__header">
+          <h2 id="col-completed">Completed</h2>
+          <span class="column__count" aria-label="0 projects">0</span>
+        </header>
+        <ul class="column__list">
+          <li class="column__empty">No projects yet</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,266 @@
+/* Shared colors and sizing keep the board consistent. */
+:root {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+
+  --col-backlog: #64748b;
+  --col-progress: #3b82f6;
+  --col-review: #f59e0b;
+  --col-completed: #10b981;
+
+  --tag-web-bg: #dbeafe;
+  --tag-web-fg: #1e40af;
+  --tag-design-bg: #fce7f3;
+  --tag-design-fg: #9d174d;
+  --tag-research-bg: #dcfce7;
+  --tag-research-fg: #166534;
+  --tag-hardware-bg: #ffedd5;
+  --tag-hardware-fg: #9a3412;
+  --tag-other-bg: #e5e7eb;
+  --tag-other-fg: #374151;
+
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-lift: 0 8px 20px rgba(0, 0, 0, 0.14);
+}
+
+/* These alternate values are ready for the later theme feature. */
+[data-theme="dark"] {
+  --bg: #171b22;
+  --surface: #222833;
+  --text: #f3f4f6;
+  --text-muted: #b4bdc9;
+  --border: #3b4553;
+
+  --tag-web-bg: #1e3a5f;
+  --tag-web-fg: #bfdbfe;
+  --tag-design-bg: #55233e;
+  --tag-design-fg: #fbcfe8;
+  --tag-research-bg: #1b4731;
+  --tag-research-fg: #bbf7d0;
+  --tag-hardware-bg: #593319;
+  --tag-hardware-fg: #fed7aa;
+  --tag-other-bg: #3b4553;
+  --tag-other-fg: #e5e7eb;
+}
+
+/* The page starts in a single column for narrow screens. */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-header {
+  padding: 32px 24px 24px;
+  text-align: center;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.tagline {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  width: min(100% - 32px, 1440px);
+  margin: 0 auto 40px;
+}
+
+.column {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--column-color);
+  border-radius: var(--radius);
+  background: var(--column-bg);
+}
+
+.column--backlog {
+  --column-color: var(--col-backlog);
+  --column-bg: #f1f3f5;
+}
+
+.column--progress {
+  --column-color: var(--col-progress);
+  --column-bg: #eff6ff;
+}
+
+.column--review {
+  --column-color: var(--col-review);
+  --column-bg: #fffbeb;
+}
+
+.column--completed {
+  --column-color: var(--col-completed);
+  --column-bg: #ecfdf5;
+}
+
+.column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.column__header h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-size: 18px;
+}
+
+.column__header h2::before {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border-radius: 50%;
+  background: var(--column-color);
+  content: "";
+}
+
+.column__count {
+  display: inline-grid;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 7px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.column__list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tag--web {
+  background: var(--tag-web-bg);
+  color: var(--tag-web-fg);
+}
+
+.tag--design {
+  background: var(--tag-design-bg);
+  color: var(--tag-design-fg);
+}
+
+.tag--research {
+  background: var(--tag-research-bg);
+  color: var(--tag-research-fg);
+}
+
+.tag--hardware {
+  background: var(--tag-hardware-bg);
+  color: var(--tag-hardware-fg);
+}
+
+.tag--other {
+  background: var(--tag-other-bg);
+  color: var(--tag-other-fg);
+}
+
+.card__title {
+  margin: 12px 0 7px;
+  font-size: 16px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.card__notes {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.column__empty {
+  padding: 18px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Two columns fit on medium screens. */
+@media (min-width: 640px) {
+  .board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    width: min(100% - 48px, 1440px);
+  }
+}
+
+/* Four columns fit on wide screens. */
+@media (min-width: 1024px) {
+  .board {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Keep the cards still when a visitor requests less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}
