@@ -84,9 +84,9 @@ function Column(props) {
         </span>
       </header>
       <ul className="column__list">
-        {props.projects.length === 0 ? (
+        {props.projects.length === 0 && !props.searchText ? (
           <li className="column__empty">No projects yet</li>
-        ) : (
+        ) : props.projects.length > 0 ? (
           props.projects.map(function (project) {
             return (
               <li key={project.id}>
@@ -99,7 +99,7 @@ function Column(props) {
               </li>
             );
           })
-        )}
+        ) : null}
       </ul>
     </section>
   );
@@ -107,8 +107,15 @@ function Column(props) {
 
 // Turn the current project list into the four board columns.
 function Board(props) {
+  var visibleProjects = props.projects.filter(function (project) {
+    return project.project.toLowerCase().indexOf(props.searchText.toLowerCase()) !== -1;
+  });
+
   return (
     <main className="board" aria-label="Project board">
+      {visibleProjects.length === 0 && props.searchText.trim() && (
+        <p className="board__no-matches" role="status">No matches</p>
+      )}
       {STATUSES.map(function (status) {
         var columnClass = "column ";
         var headingId = "col-";
@@ -133,10 +140,11 @@ function Board(props) {
             status={status}
             columnClass={columnClass}
             headingId={headingId}
+            searchText={props.searchText}
             onDelete={props.onDelete}
             onEdit={props.onEdit}
             onMove={props.onMove}
-            projects={props.projects.filter(function (project) {
+            projects={visibleProjects.filter(function (project) {
               return project.status === status;
             })}
           />
@@ -252,6 +260,7 @@ function App() {
   const [projects, setProjects] = React.useState(SEED_PROJECTS);
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [editingProject, setEditingProject] = React.useState(null);
+  const [searchText, setSearchText] = React.useState("");
 
   function handleSaveProject(project) {
     if (editingProject) {
@@ -283,6 +292,10 @@ function App() {
     setIsFormOpen(true);
   }
 
+  function handleSearchChange(event) {
+    setSearchText(event.target.value);
+  }
+
   function handleDeleteProject(projectId) {
     setProjects(projects.filter(function (project) {
       return project.id !== projectId;
@@ -308,6 +321,15 @@ function App() {
             Add project
           </button>
         </div>
+        <label className="search-field">
+          <span>Search projects</span>
+          <input
+            type="search"
+            value={searchText}
+            onChange={handleSearchChange}
+            placeholder="Search by project name"
+          />
+        </label>
       </header>
       {isFormOpen && (
         <ProjectForm
@@ -319,6 +341,7 @@ function App() {
       )}
       <Board
         projects={projects}
+        searchText={searchText}
         onDelete={handleDeleteProject}
         onEdit={handleEditProject}
         onMove={handleMoveProject}
