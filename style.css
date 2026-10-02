@@ -100,6 +100,11 @@ body {
   background: var(--column-bg);
 }
 
+.column--drop-target {
+  outline: 3px solid var(--column-color);
+  outline-offset: 2px;
+}
+
 .column--backlog {
   --column-color: var(--col-backlog);
   --column-bg: #f1f3f5;
@@ -229,6 +234,7 @@ body {
   color: var(--text-muted);
   font-size: 14px;
   line-height: 1.45;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }

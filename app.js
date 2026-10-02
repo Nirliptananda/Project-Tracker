@@ -62,8 +62,17 @@ function Card(props) {
     props.onEdit(props.project);
   }
 
+  function handleDragStart(event) {
+    event.dataTransfer.setData("text", String(props.project.id));
+    props.onDragStart();
+  }
+
+  function handleDragEnd() {
+    props.onDragEnd();
+  }
+
   return (
-    <article className="card">
+    <article className="card" draggable="true" onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <span className={getTagClassName(props.project.category)}>{props.project.category}</span>
       <h3 className="card__title">{props.project.project}</h3>
       <p className="card__notes">{props.project.notes || "No notes yet"}</p>
@@ -91,8 +100,21 @@ function Card(props) {
 
 // Show the projects that belong in one stage.
 function Column(props) {
+  function handleDragOver(event) {
+    event.preventDefault();
+    props.onDragOver(props.status);
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+    props.onDrop(props.status, Number(event.dataTransfer.getData("text")));
+  }
+
   return (
-    <section className={props.columnClass} aria-labelledby={props.headingId}>
+    <section
+      className={props.columnClass + (props.isDropTarget ? " column--drop-target" : "")}
+      aria-labelledby={props.headingId}
+    >
       <header className="column__header">
         <h2 id={props.headingId}>{props.status}</h2>
         <span
@@ -103,7 +125,7 @@ function Column(props) {
           {props.projects.length}
         </span>
       </header>
-      <ul className="column__list">
+      <ul className="column__list" onDragOver={handleDragOver} onDrop={handleDrop}>
         {props.projects.length === 0 && !props.searchText ? (
           <li className="column__empty">No projects yet</li>
         ) : props.projects.length > 0 ? (
@@ -115,6 +137,8 @@ function Column(props) {
                   onDelete={props.onDelete}
                   onEdit={props.onEdit}
                   onMove={props.onMove}
+                  onDragStart={props.onDragStart}
+                  onDragEnd={props.onDragEnd}
                 />
               </li>
             );
@@ -164,6 +188,11 @@ function Board(props) {
             onDelete={props.onDelete}
             onEdit={props.onEdit}
             onMove={props.onMove}
+            onDragOver={props.onDragOver}
+            onDrop={props.onDrop}
+            isDropTarget={props.dragOverStatus === status}
+            onDragStart={props.onDragStart}
+            onDragEnd={props.onDragEnd}
             projects={visibleProjects.filter(function (project) {
               return project.status === status;
             })}
@@ -281,6 +310,7 @@ function App() {
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [editingProject, setEditingProject] = React.useState(null);
   const [searchText, setSearchText] = React.useState("");
+  const [dragOverStatus, setDragOverStatus] = React.useState("");
 
   React.useEffect(function () {
     localStorage.setItem("projectTracker", JSON.stringify(projects));
@@ -328,6 +358,23 @@ function App() {
     return projects.filter(function (project) {
       return project.status === status;
     }).length;
+  }
+
+  function handleDragOver(status) {
+    setDragOverStatus(status);
+  }
+
+  function handleDrop(status, projectId) {
+    handleMoveProject(projectId, status);
+    setDragOverStatus("");
+  }
+
+  function handleDragStart() {
+    setDragOverStatus("");
+  }
+
+  function handleDragEnd() {
+    setDragOverStatus("");
   }
 
   function handleDeleteProject(projectId) {
@@ -397,6 +444,11 @@ function App() {
         onDelete={handleDeleteProject}
         onEdit={handleEditProject}
         onMove={handleMoveProject}
+        dragOverStatus={dragOverStatus}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
       />
     </div>
   );
