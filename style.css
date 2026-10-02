@@ -3,8 +3,9 @@
   --bg: #f4f5f7;
   --surface: #ffffff;
   --text: #1f2937;
-  --text-muted: #6b7280;
+  --text-muted: #626b78;
   --border: #e5e7eb;
+  --focus: #1d4ed8;
 
   --col-backlog: #64748b;
   --col-progress: #3b82f6;
@@ -34,6 +35,7 @@
   --text: #f3f4f6;
   --text-muted: #b4bdc9;
   --border: #3b4553;
+  --focus: #fbbf24;
 
   --tag-web-bg: #1e3a5f;
   --tag-web-fg: #bfdbfe;
@@ -343,7 +345,7 @@ body {
 }
 
 .search-field input:focus-visible {
-  outline: 3px solid #f59e0b;
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -384,7 +386,7 @@ body {
 .project-form input:focus-visible,
 .project-form select:focus-visible,
 .project-form textarea:focus-visible {
-  outline: 3px solid #f59e0b;
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
