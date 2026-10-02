@@ -15,10 +15,27 @@ function getTagClassName(category) {
   return "tag tag--other";
 }
 
+// Return the stage after this one, or no stage after Completed.
+function getNextStatus(status) {
+  var statusIndex = STATUSES.indexOf(status);
+
+  if (statusIndex === STATUSES.length - 1) {
+    return null;
+  }
+
+  return STATUSES[statusIndex + 1];
+}
+
 // Show one project's category, name, and notes.
 function Card(props) {
+  var nextStatus = getNextStatus(props.project.status);
+
   function handleDeleteClick() {
     props.onDelete(props.project.id);
+  }
+
+  function handleMoveClick() {
+    props.onMove(props.project.id, nextStatus);
   }
 
   return (
@@ -27,6 +44,11 @@ function Card(props) {
       <h3 className="card__title">{props.project.project}</h3>
       <p className="card__notes">{props.project.notes || "No notes yet"}</p>
       <div className="card__actions">
+        {nextStatus && (
+          <button className="button button--secondary" type="button" onClick={handleMoveClick}>
+            Move to next stage &rarr;
+          </button>
+        )}
         <button
           className="button button--danger"
           type="button"
@@ -61,7 +83,7 @@ function Column(props) {
           props.projects.map(function (project) {
             return (
               <li key={project.id}>
-                <Card project={project} onDelete={props.onDelete} />
+                <Card project={project} onDelete={props.onDelete} onMove={props.onMove} />
               </li>
             );
           })
@@ -100,6 +122,7 @@ function Board(props) {
             columnClass={columnClass}
             headingId={headingId}
             onDelete={props.onDelete}
+            onMove={props.onMove}
             projects={props.projects.filter(function (project) {
               return project.status === status;
             })}
@@ -233,6 +256,15 @@ function App() {
     }));
   }
 
+  function handleMoveProject(projectId, newStatus) {
+    setProjects(projects.map(function (project) {
+      if (project.id === projectId) {
+        return { ...project, status: newStatus };
+      }
+      return project;
+    }));
+  }
+
   return (
     <div>
       <header className="app-header">
@@ -245,7 +277,11 @@ function App() {
         </div>
       </header>
       {isFormOpen && <ProjectForm onAdd={handleAddProject} onCancel={handleCloseForm} />}
-      <Board projects={projects} onDelete={handleDeleteProject} />
+      <Board
+        projects={projects}
+        onDelete={handleDeleteProject}
+        onMove={handleMoveProject}
+      />
     </div>
   );
 }
