@@ -38,12 +38,19 @@ function Card(props) {
     props.onMove(props.project.id, nextStatus);
   }
 
+  function handleEditClick() {
+    props.onEdit(props.project);
+  }
+
   return (
     <article className="card">
       <span className={getTagClassName(props.project.category)}>{props.project.category}</span>
       <h3 className="card__title">{props.project.project}</h3>
       <p className="card__notes">{props.project.notes || "No notes yet"}</p>
       <div className="card__actions">
+        <button className="button button--secondary" type="button" onClick={handleEditClick}>
+          Edit
+        </button>
         {nextStatus && (
           <button className="button button--secondary" type="button" onClick={handleMoveClick}>
             Move to next stage &rarr;
@@ -83,7 +90,12 @@ function Column(props) {
           props.projects.map(function (project) {
             return (
               <li key={project.id}>
-                <Card project={project} onDelete={props.onDelete} onMove={props.onMove} />
+                <Card
+                  project={project}
+                  onDelete={props.onDelete}
+                  onEdit={props.onEdit}
+                  onMove={props.onMove}
+                />
               </li>
             );
           })
@@ -122,6 +134,7 @@ function Board(props) {
             columnClass={columnClass}
             headingId={headingId}
             onDelete={props.onDelete}
+            onEdit={props.onEdit}
             onMove={props.onMove}
             projects={props.projects.filter(function (project) {
               return project.status === status;
@@ -135,10 +148,10 @@ function Board(props) {
 
 // Collect the fields for a new project and check its name.
 function ProjectForm(props) {
-  const [projectName, setProjectName] = React.useState("");
-  const [category, setCategory] = React.useState("Web");
-  const [status, setStatus] = React.useState("Backlog");
-  const [notes, setNotes] = React.useState("");
+  const [projectName, setProjectName] = React.useState(props.project ? props.project.project : "");
+  const [category, setCategory] = React.useState(props.project ? props.project.category : "Web");
+  const [status, setStatus] = React.useState(props.project ? props.project.status : "Backlog");
+  const [notes, setNotes] = React.useState(props.project ? props.project.notes : "");
   const [errorMessage, setErrorMessage] = React.useState("");
 
   function handleNameChange(event) {
@@ -167,8 +180,8 @@ function ProjectForm(props) {
       return;
     }
 
-    props.onAdd({
-      id: Date.now(),
+    props.onSave({
+      id: props.project ? props.project.id : Date.now(),
       project: trimmedName,
       category: category,
       status: status,
@@ -183,7 +196,7 @@ function ProjectForm(props) {
 
   return (
     <section className="project-form" aria-labelledby="form-title">
-      <h2 id="form-title">Add a project</h2>
+      <h2 id="form-title">{props.project ? "Edit project" : "Add a project"}</h2>
       <form onSubmit={handleSubmit}>
         <div className="project-form__fields">
           <label className="project-form__field">
@@ -224,7 +237,9 @@ function ProjectForm(props) {
         </div>
         <p className="form-error" aria-live="polite">{errorMessage}</p>
         <div className="project-form__actions">
-          <button className="button button--primary" type="submit">Save project</button>
+          <button className="button button--primary" type="submit">
+            {props.project ? "Save changes" : "Save project"}
+          </button>
           <button className="button button--secondary" type="button" onClick={props.onCancel}>Cancel</button>
         </div>
       </form>
@@ -236,18 +251,36 @@ function ProjectForm(props) {
 function App() {
   const [projects, setProjects] = React.useState(SEED_PROJECTS);
   const [isFormOpen, setIsFormOpen] = React.useState(false);
+  const [editingProject, setEditingProject] = React.useState(null);
 
-  function handleAddProject(project) {
-    setProjects(projects.concat(project));
+  function handleSaveProject(project) {
+    if (editingProject) {
+      setProjects(projects.map(function (currentProject) {
+        if (currentProject.id === project.id) {
+          return project;
+        }
+        return currentProject;
+      }));
+    } else {
+      setProjects(projects.concat(project));
+    }
+    setEditingProject(null);
     setIsFormOpen(false);
   }
 
   function handleOpenForm() {
+    setEditingProject(null);
     setIsFormOpen(true);
   }
 
   function handleCloseForm() {
+    setEditingProject(null);
     setIsFormOpen(false);
+  }
+
+  function handleEditProject(project) {
+    setEditingProject(project);
+    setIsFormOpen(true);
   }
 
   function handleDeleteProject(projectId) {
@@ -276,10 +309,18 @@ function App() {
           </button>
         </div>
       </header>
-      {isFormOpen && <ProjectForm onAdd={handleAddProject} onCancel={handleCloseForm} />}
+      {isFormOpen && (
+        <ProjectForm
+          key={editingProject ? editingProject.id : "new-project"}
+          project={editingProject}
+          onSave={handleSaveProject}
+          onCancel={handleCloseForm}
+        />
+      )}
       <Board
         projects={projects}
         onDelete={handleDeleteProject}
+        onEdit={handleEditProject}
         onMove={handleMoveProject}
       />
     </div>
