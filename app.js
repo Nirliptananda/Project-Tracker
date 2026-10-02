@@ -296,6 +296,10 @@ function App() {
     setSearchText(event.target.value);
   }
 
+  function handleClearSearch() {
+    setSearchText("");
+  }
+
   function handleDeleteProject(projectId) {
     setProjects(projects.filter(function (project) {
       return project.id !== projectId;
@@ -321,15 +325,28 @@ function App() {
             Add project
           </button>
         </div>
-        <label className="search-field">
-          <span>Search projects</span>
+        <div className="search-field">
+          <label htmlFor="project-search">Search projects</label>
+          <div className="search-field__controls">
           <input
+            id="project-search"
             type="search"
             value={searchText}
             onChange={handleSearchChange}
             placeholder="Search by project name"
           />
-        </label>
+            {searchText && (
+              <button
+                className="button button--secondary search-field__clear"
+                type="button"
+                aria-label="Clear search"
+                onClick={handleClearSearch}
+              >
+                &times;
+              </button>
+            )}
+          </div>
+        </div>
       </header>
       {isFormOpen && (
         <ProjectForm
